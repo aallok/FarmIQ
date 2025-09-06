@@ -1,0 +1,12 @@
+﻿venv/
+__pycache__/
+*.pyc
+*.pkl
+*.mp3
+*.wav
+.env
+.env.* 
+.DS_Store
+models/
+backups/
+audio_samples/

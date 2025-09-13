@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>FarmIQ Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo-tile"><img src="logo.png" alt="FarmIQ"></div>
+      <div><div class="brand-title">FarmIQ</div><div class="brand-sub">Digital Krishi Officer</div></div>
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center">
+      <select id="langSwitch" class="form-field" style="width:140px">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="ml">മലയാളം</option>
+      </select>
+      <button class="btn" onclick="location.href='project.html'">Project Brief</button>
+      <button class="btn" onclick="location.href='profile.html'">Profile</button>
+      <button class="btn primary" onclick="location.href='index-chat.html'">Start Demo</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+
+      <!-- Left panel -->
+      <aside class="card">
+        <h3 data-i18n="farmerTitle">Farmer Details</h3>
+        <p class="small" data-i18n="farmerSub">Fill farmer profile to get personalized advice</p>
+
+        <label style="display:block;margin-top:12px">Farmer name</label>
+        <input id="fname" class="form-field" data-i18n-placeholder="farmerNamePlaceholder" placeholder="Farmer name">
+
+        <label style="display:block;margin-top:12px">Location (state)</label>
+        <select id="state" class="form-field">
+          <option value="">Choose state</option>
+          <option>Karnataka</option>
+          <option>Kerala</option>
+          <option>Tamil Nadu</option>
+          <option>Uttar Pradesh</option>
+          <option>Maharashtra</option>
+        </select>
+
+        <label style="display:block;margin-top:12px">Crop</label>
+        <select id="crop" class="form-field">
+          <option>Banana</option>
+          <option>Rice</option>
+          <option>Wheat</option>
+          <option>Maize</option>
+        </select>
+
+        <label style="display:block;margin-top:12px">Season</label>
+        <select id="season" class="form-field">
+          <option>Monsoon</option>
+          <option>Rabi</option>
+          <option>Kharif</option>
+          <option>Summer</option>
+        </select>
+
+        <div style="margin-top:12px" class="small">Farmer data saved locally for demo.</div>
+      </aside>
+
+      <!-- Center hero -->
+      <section class="hero card">
+        <h1 data-i18n="heroTitle">Ask in your language — text, voice, or photo</h1>
+        <p data-i18n="heroSub">Local, contextual, fast.</p>
+
+        <div style="margin-top:12px;display:flex;gap:10px">
+          <button class="btn primary" id="openChat" data-i18n="openChat">Open Chat</button>
+          <button class="btn" id="uploadPhoto" data-i18n="uploadPhoto">Upload Photo</button>
+        </div>
+
+        <div class="kpi" style="margin-top:20px">
+          <div class="box"><strong>85%</strong><span class="small">Demo accuracy</span></div>
+          <div class="box"><strong>12</strong><span class="small">Crops supported</span></div>
+        </div>
+      </section>
+
+      <!-- Right tips -->
+      <aside class="card">
+        <h3>Insights & Tips</h3>
+        <p data-i18n="insTip" class="small">Tip of the day: Use neem-based biopesticides early morning for minor pest control.</p>
+        <div style="margin-top:12px"><button class="btn" id="moreTips" data-i18n="moreTips">More tips</button></div>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="footer">Team CodeXion • FarmIQ</footer>
+
+  <script src="app.js"></script>
+  <script>
+    // wire language select and buttons + local persistence for profile fields
+    document.getElementById('langSwitch').value = FarmIQ.getLang();
+    document.getElementById('langSwitch').addEventListener('change', e => FarmIQ.setLang(e.target.value));
+
+    document.getElementById('openChat').addEventListener('click', ()=> location.href='index-chat.html');
+    document.getElementById('uploadPhoto').addEventListener('click', ()=> location.href='index-chat.html');
+    document.getElementById('moreTips').addEventListener('click', ()=> alert('Tip: rotate crops; sanitize tools; use neem-based biopesticide.'));
+
+    // persist farmer fields to localStorage
+    const fname = document.getElementById('fname'), state = document.getElementById('state'), crop = document.getElementById('crop'), season = document.getElementById('season');
+    fname.addEventListener('input', e => localStorage.setItem('farmi_name', e.target.value));
+    state.addEventListener('change', e => localStorage.setItem('farmi_state', e.target.value));
+    crop.addEventListener('change', e => localStorage.setItem('farmi_crop', e.target.value));
+    season.addEventListener('change', e => localStorage.setItem('farmi_season', e.target.value));
+
+    window.addEventListener('load', ()=>{
+      fname.value = localStorage.getItem('farmi_name') || '';
+      state.value = localStorage.getItem('farmi_state') || '';
+      crop.value = localStorage.getItem('farmi_crop') || 'Banana';
+      season.value = localStorage.getItem('farmi_season') || 'Monsoon';
+    });
+  </script>
+</body>
+</html>

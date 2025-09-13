@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Farmer Profile</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <div class="logo-tile"><img src="logo.png" alt="FarmIQ"></div>
+      <div><div class="brand-title">FarmIQ</div><div class="brand-sub">Digital Krishi Officer</div></div>
+    </div>
+    <div><button class="btn" onclick="location.href='index.html'">Back</button></div>
+  </header>
+
+  <main class="container">
+    <div class="card" style="max-width:720px;margin:0 auto">
+      <h2>Farmer Profile</h2>
+      <label>Name:<br><input id="name" class="form-field"></label><br>
+      <label>Village:<br><input id="village" class="form-field"></label><br>
+      <label>History / Notes:<br><textarea id="history" class="form-field" rows="4"></textarea></label><br>
+      <button class="btn primary" id="saveProfile">Save</button>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    const p = FarmIQ.loadProfile ? FarmIQ.loadProfile() : {};
+    if(p.name) document.getElementById('name').value = p.name;
+    if(p.village) document.getElementById('village').value = p.village;
+    if(p.history) document.getElementById('history').value = p.history;
+
+    document.getElementById('saveProfile').addEventListener('click', ()=>{
+      FarmIQ.saveProfile({name:document.getElementById('name').value, village:document.getElementById('village').value, history:document.getElementById('history').value});
+      alert('Profile saved (local demo).');
+      location.href='index.html';
+    });
+  </script>
+</body>
+</html>

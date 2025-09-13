@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Choose Language</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- header small -->
+  <header class="header">
+    <div class="brand">
+      <div class="logo-tile"><img src="logo.png" alt="FarmIQ"></div>
+      <div><div class="brand-title">FarmIQ</div><div class="brand-sub">Digital Krishi Officer</div></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn" onclick="location.href='splash.html'">Back</button>
+    </div>
+  </header>
+
+  <main style="min-height:70vh;display:flex;align-items:center;justify-content:center">
+    <div class="card" style="max-width:520px;text-align:center">
+      <h2>Select your preferred language</h2>
+      <select id="langSelect" class="form-field">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+        <option value="ml">മലയാളം</option>
+        <option value="kn">ಕನ್ನಡ</option>
+        <option value="ta">தமிழ்</option>
+        <option value="te">తెలుగు</option>
+        <option value="bn">বাংলা</option>
+        <option value="mr">मराठी</option>
+        <option value="gu">ગુજરાતી</option>
+        <option value="or">ଓଡ଼ିଆ</option>
+        <option value="pa">ਪੰਜਾਬੀ</option>
+      </select>
+      <div style="margin-top:14px">
+        <button class="btn primary" id="saveLang">Continue</button>
+      </div>
+    </div>
+  </main>
+
+<script src="app.js"></script>
+<script>
+  // preselect saved lang
+  document.getElementById('langSelect').value = FarmIQ.getLang();
+  document.getElementById('saveLang').addEventListener('click', ()=>{
+    const v = document.getElementById('langSelect').value;
+    FarmIQ.setLang(v);
+    location.href = 'index.html';
+  });
+</script>
+</body>
+</html>

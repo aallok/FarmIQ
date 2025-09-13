@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>FarmIQ Chat</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <div class="logo-tile"><img src="logo.png" alt="FarmIQ"></div>
+      <div><div class="brand-title">FarmIQ</div><div class="brand-sub">Digital Krishi Officer</div></div>
+    </div>
+    <div><button class="btn" onclick="location.href='index.html'">Back</button></div>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+      <div></div>
+      <div class="card">
+        <div class="chat-area" id="chatArea">
+          <div class="msg bot" data-i18n="welcomeMsg">Welcome! Ask your question.</div>
+        </div>
+
+        <div class="controls">
+          <button class="icon-btn" id="imgBtn" title="Upload photo">📷</button>
+          <button class="icon-btn" id="voiceBtn" title="Record voice">🎤</button>
+          <input id="msg" type="text" placeholder="Type your question..." data-i18n-placeholder="chatPlaceholder">
+          <button id="send" class="btn primary" data-i18n="sendButton">Send</button>
+        </div>
+
+        <div id="previewArea" class="preview"></div>
+      </div>
+
+      <aside class="card">
+        <h4>Quick actions</h4>
+        <button class="btn" id="demoIdentify">Run Demo Identify</button>
+        <p class="small" style="margin-top:10px">For demo: upload image → get likely diagnosis → advice.</p>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">Team CodeXion • FarmIQ</footer>
+
+  <script src="app.js"></script>
+  <script>
+    const chatArea = document.getElementById('chatArea');
+    const msg = document.getElementById('msg');
+    const send = document.getElementById('send');
+    const preview = document.getElementById('previewArea');
+
+    function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function addUser(text){ chatArea.innerHTML += `<div class="msg user">${escapeHtml(text)}</div>`; chatArea.scrollTop = chatArea.scrollHeight; }
+    function addBot(text){ chatArea.innerHTML += `<div class="msg bot">${escapeHtml(text)}</div>`; chatArea.scrollTop = chatArea.scrollHeight; }
+
+    send.addEventListener('click', ()=>{
+      const t = msg.value.trim(); if(!t) return;
+      addUser(t); msg.value='';
+      setTimeout(()=> addBot(`Demo: Recommend treatment for "${t}" — follow safety guidance.`),700);
+    });
+
+    // image upload
+    document.getElementById('imgBtn').addEventListener('click', ()=>{
+      const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
+      inp.onchange = ev=>{
+        const f = ev.target.files[0]; if(!f) return;
+        const url = URL.createObjectURL(f);
+        preview.innerHTML = `<img src="${url}" class="thumb"><div style="display:flex;gap:8px"><button class="btn" id="sendImg">Send Image</button><button class="btn" id="cancelImg">Cancel</button></div>`;
+        document.getElementById('sendImg').addEventListener('click', ()=>{
+          addUser('[Image uploaded]');
+          addBot('Demo: Image received. Likely leaf spot — remove infected tissue and apply recommended fungicide.');
+          preview.innerHTML='';
+        });
+        document.getElementById('cancelImg').addEventListener('click', ()=> preview.innerHTML='');
+      };
+      inp.click();
+    });
+
+    // voice record (simple demo)
+    let recorder, chunks=[];
+    document.getElementById('voiceBtn').addEventListener('click', async ()=>{
+      if(!navigator.mediaDevices || !window.MediaRecorder){ alert('Recording not supported on this browser'); return; }
+      const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+      recorder = new MediaRecorder(stream);
+      chunks = [];
+      recorder.ondataavailable = e=> chunks.push(e.data);
+      recorder.onstop = ()=>{
+        const blob = new Blob(chunks,{type:'audio/webm'});
+        const url = URL.createObjectURL(blob);
+        preview.innerHTML = `<audio controls src="${url}"></audio><div style="margin-top:8px"><button class="btn" id="sendVoice">Send Voice</button><button class="btn" id="cancelVoice">Cancel</button></div>`;
+        document.getElementById('sendVoice').addEventListener('click', ()=>{ addUser('[Voice message]'); addBot('Demo: Voice processed — suggestion: apply neem spray early morning.'); preview.innerHTML=''; });
+        document.getElementById('cancelVoice').addEventListener('click', ()=> preview.innerHTML='');
+      };
+      recorder.start();
+      alert('Recording for 3 seconds (demo). Click OK to start.');
+      setTimeout(()=> recorder.stop(),3000);
+    });
+
+    document.getElementById('demoIdentify').addEventListener('click', ()=> { addUser('[Demo identify]'); addBot('Demo: Possible banana leaf spot — recommended fungicide X.'); });
+  </script>
+</body>
+</html>
